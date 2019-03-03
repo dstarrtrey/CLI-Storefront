@@ -10,7 +10,8 @@ const connection = mysql.createConnection({
   database: process.env.DATABASE
 });
 connection.connect(function(err) {
-  connection.query("SELECT * FROM products", function(error, results, fields) {
+  if (err) throw err;
+  connection.query("SELECT * FROM products", function(error, results) {
     if (error) throw error;
     console.log("Products include: ");
     results.forEach(result => {
