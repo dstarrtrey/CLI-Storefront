@@ -1,26 +1,48 @@
-const processPurchase = async (input, connection) => {
+const chalk = require("chalk");
+
+const processPurchase = (input, connection) => {
   connection.query(
-    `SELECT * FROM products WHERE item_id = ${input.purchaseId}`,
+    "SELECT * FROM products WHERE item_id=?",
+    [input.purchaseId],
     function(error, results, fields) {
       if (error) throw error;
-      if (input.quantity > results.stock_quantity) {
+      const inputAmt = input.quantity;
+      const dbAmt = results[0].stock_quantity;
+      if (inputAmt > dbAmt) {
         console.log(
           chalk.red(
             "Our apologies. Our stores have insufficient quantity for your request."
           )
         );
+        console.log(
+          "We have",
+          chalk.green(dbAmt),
+          chalk.blue(results[0].product_name) + "(s) in stock."
+        );
+        connection.end();
         return;
       } else {
         connection.query(
-          `UPDATE products SET stock_quantity=${results.stock_quantity -
-            input.quantity} WHERE item_id = ${input.purchaseId}`,
-          function(error, results, fields) {
-            if (error) throw error;
+          "UPDATE products SET stock_quantity=? WHERE item_id =?",
+          [dbAmt - inputAmt, input.purchaseId],
+          function(err) {
+            if (err) throw err;
+            console.log(
+              chalk.green("Purchase successful!"),
+              "You bought",
+              chalk.green(inputAmt),
+              chalk.blue(results[0].product_name) + chalk.red("(s)")
+            );
+            console.log(
+              "Total cost:",
+              chalk.green("$" + (inputAmt * results[0].price).toFixed(2))
+            );
+            connection.end();
           }
         );
-        console.log(chalk.green("Purchase successful!"));
       }
     }
   );
 };
-module.exports(processPurchase);
+
+module.exports = processPurchase;
