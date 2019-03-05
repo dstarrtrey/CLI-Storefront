@@ -23,8 +23,12 @@ const processPurchase = (input, connection) => {
         return;
       } else {
         connection.query(
-          "UPDATE products SET stock_quantity=? WHERE item_id =?",
-          [dbAmt - inputAmt, input.purchaseId],
+          "UPDATE products SET stock_quantity=?, product_sales=? WHERE item_id =?;",
+          [
+            dbAmt - inputAmt,
+            results[0].product_sales + results[0].price * inputAmt,
+            input.purchaseId
+          ],
           function(err) {
             if (err) throw err;
             console.log(

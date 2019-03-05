@@ -1,5 +1,6 @@
-const inquirer = require("inquirer");
-const chalk = require("chalk");
+const inquirer = require("inquirer"); //CLI input/output
+const chalk = require("chalk"); //CLI styling
+
 const addToInventory = (connection, cback) => {
   inquirer
     .prompt([

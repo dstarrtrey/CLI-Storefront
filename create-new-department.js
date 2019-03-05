@@ -1,6 +1,5 @@
-const chalk = require("chalk"); //CLI styling
-
-const viewProducts = (connection, cback) => {
+//Function for creating a new department in the database
+const createNewDepartment = (connection, cb) => {
   connection.query("SELECT * FROM products", function(error, results) {
     if (error) throw error;
     console.log("---------------------------------------------------");
@@ -8,18 +7,18 @@ const viewProducts = (connection, cback) => {
     results.forEach(result => {
       console.log(
         "id:",
-        chalk.yellow(result.item_id),
+        result.item_id,
         "| name:",
-        chalk.blueBright(result.product_name),
+        result.product_name,
         "| price:",
-        chalk.green("$" + result.price),
+        "$" + result.price,
         "| quantity:",
-        chalk.yellow(result.stock_quantity)
+        result.stock_quantity
       );
     });
     console.log("---------------------------------------------------");
-    cback();
+    cb();
   });
 };
 
-module.exports = viewProducts;
+module.exports = createNewDepartment;

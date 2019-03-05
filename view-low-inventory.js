@@ -1,4 +1,5 @@
-const chalk = require("chalk");
+const chalk = require("chalk"); //CLI styling
+
 const viewLowInventory = (connection, cback) => {
   connection.query("SELECT * FROM products WHERE stock_quantity < 5", function(
     error,
