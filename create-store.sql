@@ -57,3 +57,7 @@ INSERT INTO departments (department_name, over_head_costs) VALUES ("Garden", 112
 
 SELECT * FROM departments;
 SELECT * FROM products;
+
+
+
+
