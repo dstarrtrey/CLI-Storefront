@@ -1,2 +1,8 @@
 # CLI-Storefront
-Storefront simulator using MySQL and Node
+Command line storefront simulator using MySQL and Node. 
+
+## Customer
+
+## Manager
+
+## Supervisor
