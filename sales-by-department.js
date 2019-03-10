@@ -29,23 +29,24 @@ const salesByDepartment = (con, cb) => {
     ]
   });
   con.query(
-    `SELECT * FROM departments;
-    SELECT department_name, SUM(product_sales) AS total_sales FROM products GROUP BY department_name;`,
+    `SELECT departments.department_id,
+     departments.department_name,
+     departments.over_head_costs,
+     IFNULL(SUM(products.product_sales), 0.00) AS total_sales,
+     (IFNULL(SUM(products.product_sales), 0.00) - departments.over_head_costs) AS total_profits
+    FROM departments 
+    LEFT JOIN products on products.department_name = departments.department_name
+    GROUP BY departments.department_id;`,
     (err, results) => {
       if (err) throw err;
       console.log("---------------------------------------------------");
-      results[0].forEach(dept => {
-        const salesObj = results[1].find(
-          x => x.department_name === dept.department_name
-        );
-        const totalSales = salesObj.total_sales;
-        const totalProfit = totalSales - dept.over_head_costs;
+      results.forEach(dept => {
         table.push([
           dept.department_id,
           dept.department_name,
           dept.over_head_costs,
-          totalSales,
-          totalProfit
+          dept.total_sales,
+          dept.total_profits
         ]);
       });
       console.log(table.toString());
